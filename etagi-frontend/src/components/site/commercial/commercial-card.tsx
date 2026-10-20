@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { toast } from '@/components/site/common/toast';
 import { addToFavorites, removeFromFavorites } from '@/lib/api-users';
 import { useTranslation } from '@/lib/i18n';
+import { API_URL } from '@/lib/api';
+const SERVER_URL = API_URL.replace('/api', '');
 
 export function CommercialCard({ item }: { item: any }) {
   const router = useRouter();
@@ -16,9 +18,10 @@ export function CommercialCard({ item }: { item: any }) {
   const [loading, setLoading] = useState(false);
 
   const imgUrl = item.images?.[0]?.url
-    ? (item.images[0].url.startsWith('http') ? item.images[0].url : `http://localhost:5000${item.images[0].url}`)
-    : 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800';
+  ? (item.images[0].url.startsWith('http') ? item.images[0].url : `${SERVER_URL}${item.images[0].url}`)
+  : 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800';
 
+  
   // ✅ Sahifa yuklanganda izbrannoe holatini tekshirish
   useEffect(() => {
     const token = localStorage.getItem('site-token');

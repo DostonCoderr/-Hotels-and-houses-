@@ -7,9 +7,14 @@ import { useRouter } from 'next/navigation';
 import { fetchPropertyById, Property } from '@/lib/api-properties';
 import { addToHistory } from '@/lib/api-users';
 import { toast } from '@/components/site/common/toast';
-import { api } from '@/lib/api';
+import { api ,API_URL } from '@/lib/api';
 import { useTranslation } from '@/lib/i18n';
 import type { TranslationKey } from '@/lib/i18n';
+
+
+const SERVER_URL = API_URL.replace('/api', '');
+
+
 
 export default function CommercialDetailPage({ params }: { params: { id: string } }) {
   const id = Number(params.id);
@@ -83,7 +88,7 @@ export default function CommercialDetailPage({ params }: { params: { id: string 
 
   // Galereya boshqaruvi
   const imgs = data?.images?.map(i =>
-    i.url.startsWith('http') ? i.url : `http://localhost:5000${i.url}`
+    i.url.startsWith('http') ? i.url : `${SERVER_URL}${i.url}`
   ) || ['https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200'];
 
   const nextImg = () => setImgIdx((p) => (p + 1) % imgs.length);

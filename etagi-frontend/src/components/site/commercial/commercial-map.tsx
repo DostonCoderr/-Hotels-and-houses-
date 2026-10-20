@@ -5,6 +5,11 @@ import { useRouter } from 'next/navigation';
 import { Property } from '@/lib/api-properties';
 import { useTranslation } from '@/lib/i18n';
 
+import { API_URL } from '@/lib/api';
+const SERVER_URL = API_URL.replace('/api', '');
+
+
+
 export function CommercialMap({ items, onMarkerClick }: { items: Property[], onMarkerClick: (item: Property) => void }) {
   const { t } = useTranslation();
   const mapRef = useRef<HTMLDivElement>(null);
@@ -66,7 +71,7 @@ export function CommercialMap({ items, onMarkerClick }: { items: Property[], onM
       const lng = Number(p.lng);
 
       const imgUrl = p.images?.[0]?.url
-        ? (p.images[0].url.startsWith('http') ? p.images[0].url : `http://localhost:5000${p.images[0].url}`)
+        ? (p.images[0].url.startsWith('http') ? p.images[0].url : `${SERVER_URL}${p.images[0].url}`)
         : 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800';
 
       const icon = L.divIcon({

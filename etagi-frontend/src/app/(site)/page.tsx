@@ -38,7 +38,7 @@ export default async function HomePage() {
     lat: p.lat || 41.311081,
     lng: p.lng || 69.240562,
     img: p.images?.[0]?.url
-      ? (p.images[0].url.startsWith('http') ? p.images[0].url : `http://localhost:5000${p.images[0].url}`)
+      ? (p.images[0].url.startsWith('http') ? p.images[0].url : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000'}${p.images[0].url}`)
       : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600',
     type: p.type === 'house' ? 'house' : p.type === 'commercial' ? 'com' : 'new',
     date: 1,

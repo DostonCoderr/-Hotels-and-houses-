@@ -54,6 +54,7 @@ import {
   type SettingsGrouped,
 } from '@/lib/api-settings';
 import { useTranslation } from '@/lib/translations';
+import { UPLOADS_URL } from '@/lib/constants';
 
 interface SettingsFormProps {
   initialData?: SettingsGrouped | null;
@@ -566,7 +567,7 @@ export function SettingsForm({ initialData, onSubmit }: SettingsFormProps) {
                                   src={
                                     value.startsWith('http')
                                       ? value
-                                      : `http://localhost:5000${value}`
+                                      : `${UPLOADS_URL}${value}`
                                   }
                                   alt="Logo"
                                   className="h-10 w-auto object-contain"

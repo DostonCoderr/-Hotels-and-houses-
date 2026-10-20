@@ -32,6 +32,7 @@ import { Button } from '@/components/ui/button';
 import { UPLOADS_URL } from '@/lib/constants';
 import { formatPrice } from '@/lib/format';
 
+
 interface ProjectTableProps {
   projects: any[];
   onDelete?: (id: number) => void;
@@ -159,10 +160,10 @@ export function ProjectTable({ projects, onDelete }: ProjectTableProps) {
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href={`http://localhost:3001/stroitelstvo/${project.id}`} target="_blank" className="cursor-pointer">
+                          <a href={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3001'}/stroitelstvo/${project.id}`} target="_blank" className="cursor-pointer">
                             <Eye className="mr-2 h-4 w-4" />
                             Посмотреть на сайте
-                          </Link>
+                          </a>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem

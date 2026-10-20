@@ -8,6 +8,7 @@ import { fetchProperties, Property } from '@/lib/api-properties';
 import { CommercialCard } from '@/components/site/commercial/commercial-card';
 import { CommercialMap } from '@/components/site/commercial/commercial-map';
 import { useTranslation } from '@/lib/i18n';
+import { API_URL } from '@/lib/api';
 
 function CommercialPageContent() {
   const { t } = useTranslation();
@@ -90,7 +91,7 @@ function CommercialPageContent() {
   const getImageUrl = (imgUrl?: string) => {
     if (!imgUrl) return 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800';
     if (imgUrl.startsWith('http')) return imgUrl;
-    return `http://localhost:5000${imgUrl}`;
+    return `${API_URL.replace('/api', '')}${imgUrl}`;
   };
 
   return (

@@ -11,6 +11,10 @@ import { toast } from '@/components/site/common/toast';
 import { getProfile, updateProfile, getFavorites, getViewHistory, getScheduled, UserProfile } from '@/lib/api-users';
 import { useTranslation } from '@/lib/i18n';
 import type { TranslationKey } from '@/lib/i18n';
+import { API_URL } from '@/lib/api';
+
+const SERVER_URL = API_URL.replace('/api', '');
+
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -25,7 +29,7 @@ const itemVariants = {
 const getImageUrl = (url?: string) => {
   if (!url) return 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600';
   if (url.startsWith('http')) return url;
-  return `http://localhost:5000${url}`;
+  return `${SERVER_URL}${url}`; // ✅ localhost o'rniga SERVER_URL
 };
 
 export default function ProfilePage() {
