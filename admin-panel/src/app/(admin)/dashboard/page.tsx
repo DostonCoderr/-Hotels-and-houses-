@@ -10,10 +10,12 @@ import { ConversionFunnel } from '@/components/dashboard/conversion-funnel';
 import { api } from '@/lib/api';
 import { useTranslation } from '@/lib/translations';
 import type { Property } from '@/types';
+import { useAuthStore } from '@/store/auth';
 
 export default function DashboardPage() {
   const { t } = useTranslation();
   const router = useRouter();
+  const { isAuthenticated, isLoading: authLoading } = useAuthStore();
   const [properties, setProperties] = useState<Property[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -27,6 +29,14 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
+    // ✅ Agar auth tekshirilayotgan bo'lsa, hech narsa qilmaymiz
+    if (authLoading) return;
+
+    // ✅ Agar foydalanuvchi tizimga kirmagan bo'lsa, login ga yuboramiz
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
+    }
     async function load() {
       try {
         setLoading(true);
@@ -47,14 +57,20 @@ export default function DashboardPage() {
             scheduled: s.counts.applications.new || 0,
           });
         }
-      } catch (err) {
+      } catch (err: any) {
         toast.error(t.noData);
+        // Agar token eskirgan bo'lsa (401 xato), tizimdan chiqaramiz
+        if (err?.response?.status === 401) {
+          useAuthStore.getState().logout();
+          router.push('/login');
+        }
       } finally {
         setLoading(false);
       }
     }
+    
     load();
-  }, [t]);
+  }, [t, isAuthenticated, authLoading, router]);
 
   const handleDelete = async (property: Property) => {
     if (!confirm(t.deleteConfirm)) return;

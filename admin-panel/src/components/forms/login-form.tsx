@@ -72,8 +72,10 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     clearError();
     const success = await login(data.email, data.password);
+    
     if (success) {
-      router.push('/dashboard');
+      // ✅ Zustand state to'liq saqlangach, sahifani qattiq yangilaymiz
+      window.location.href = '/dashboard';
     } else {
       controls.start({
         x: [0, -10, 10, -10, 10, 0],
@@ -81,7 +83,6 @@ export function LoginForm() {
       });
     }
   };
-
   return (
     <motion.form
       ref={formRef}
