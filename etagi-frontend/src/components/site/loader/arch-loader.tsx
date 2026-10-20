@@ -16,45 +16,61 @@ export function ArchLoader() {
   const [progress, setProgress] = useState(0);
   const [isDone, setIsDone] = useState(false);
   const [isZooming, setIsZooming] = useState(false);
-  const [showLoader, setShowLoader] = useState(true);
+  
+  // ✅ sessionStorage ni tekshiramiz (agar oldin ko'rsatilgan bo'lsa, qayta chiqarmaymiz)
+  const [showLoader, setShowLoader] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return !sessionStorage.getItem(LOADER_KEY);
+    }
+    return true; // Serverda har doim true (hydration xatosi bo'lmasligi uchun)
+  });
 
   useEffect(() => {
-    let current = 0;
-    
-    const progressTimer = setInterval(() => {
-      current += 2;
-      if (current > 92 && !isDone) current = 92;
-      setProgress(Math.floor(current));
-    }, 50);
+    if (!showLoader) return;
 
+    let currentProgress = 0;
+    
+    // 1. Progress hisoblagich
+    const progressTimer = setInterval(() => {
+      currentProgress += 2;
+      if (currentProgress >= 92) {
+        clearInterval(progressTimer);
+      } else {
+        setProgress(currentProgress);
+      }
+    }, 40); // biroz tezlashtirdik
+
+    // 2. Rasmlarni almashtirish
     const imgTimer = setInterval(() => {
       setImgIndex((prev) => {
-        if (prev === IMAGES.length - 1) {
+        if (prev >= IMAGES.length - 1) {
           clearInterval(imgTimer);
           clearInterval(progressTimer);
-          
           setProgress(100);
-          setTimeout(() => setIsDone(true), 300); 
-          setTimeout(() => setIsZooming(true), 1800); 
+          
+          // Animatsiya ketma-ketligi
+          setTimeout(() => setIsDone(true), 200); 
+          setTimeout(() => setIsZooming(true), 1200); 
           
           setTimeout(() => {
             setShowLoader(false);
             window.dispatchEvent(new Event(LOADER_EVENT));
             (window as any).__loaderDone = true;
-            try { sessionStorage.setItem(LOADER_KEY, '1'); } catch {}
-          }, 3200); 
-          
+            try { sessionStorage.setItem(LOADER_KEY, '1'); } catch {} // Xatolik bo'lsa ham davom etadi
+          }, 2600); 
+
           return prev;
         }
         return prev + 1;
       });
-    }, 900);
+    }, 700);
 
+    // ✅ Tozalash (agar komponent erta yopilsa)
     return () => {
       clearInterval(progressTimer);
       clearInterval(imgTimer);
     };
-  }, [isDone]);
+  }, [showLoader]); // ⚠️ isDone emas, showLoader ga bog'landi
 
   if (!showLoader) return null;
 
@@ -82,7 +98,7 @@ export function ArchLoader() {
                 transition={{ duration: 0.4 }}
                 className="relative flex items-center justify-center gap-4"
               >
-                {/* Chap tomon: ЭТ */}
+                {/* Chap tomon: Дове */}
                 <div className="text-[#e54d42] relative z-10 drop-shadow-[0_0_15px_rgba(229,77,66,0.3)]" style={{ fontFamily: 'Arial, sans-serif', fontWeight: 900, fontSize: 'clamp(60px, 10vw, 150px)', lineHeight: 1, letterSpacing: '-0.02em' }}>
                   Дове
                 </div>
@@ -91,21 +107,20 @@ export function ArchLoader() {
                 <div className="relative z-0 mx-2" style={{ width: 'clamp(150px, 18vw, 260px)', height: 'clamp(150px, 18vw, 260px)' }}>
                   <motion.div
                     key={imgIndex}
-                    initial={{ opacity: 0, y: -100 }}
+                    initial={{ opacity: 0, y: -50 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 100 }}
-                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    exit={{ opacity: 0, y: 50 }}
+                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                     className="absolute inset-0 shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden ring-1 ring-white/10"
                     style={{ backgroundImage: `url(${IMAGES[imgIndex]})`, backgroundSize: 'cover', backgroundPosition: 'center', borderRadius: '16px' }}
                   />
                 </div>
 
-                {/* O'ng tomon: ЖИ va Uy ikonkasi */}
+                {/* O'ng tomon: риЯ va Uy ikonkasi */}
                 <div className="flex items-center gap-2 relative z-10">
                   <div className="text-[#e54d42] drop-shadow-[0_0_15px_rgba(229,77,66,0.3)]" style={{ fontFamily: 'Arial, sans-serif', fontWeight: 900, fontSize: 'clamp(60px, 10vw, 150px)', lineHeight: 1, letterSpacing: '-0.02em' }}>
                     риЯ
                   </div>
-                  {/* Uy ikonkasi (rasmdagi kabi) */}
                   <svg width="60" height="60" viewBox="0 0 24 24" fill="#e54d42" className="ml-2">
                     <path d="M12 3L2 12h3v8h5v-6h4v6h5v-8h3L12 3z" />
                     <path d="M7 11v8h2v-6h6v6h2v-8H7z" fill="#1a2235" opacity="0.3" />
