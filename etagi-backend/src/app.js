@@ -19,16 +19,37 @@ BigInt.prototype.toJSON = function () {
 const app = express();
 
 // ============================================================
-// SECURITY
+// SECURITY & CORS
 // ============================================================
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
 }));
 
+// ✅ Ruxsat etilgan domenlar
+const allowedOrigins = [
+  'http://localhost:3000', 
+  'http://localhost:3001',
+  'https://doveriya-hotels-nu.vercel.app', // Frontend
+  'https://hotels-and-houses-omega.vercel.app' // Admin
+];
+
 app.use(cors({
-  origin: '*',
+  origin: function (origin, callback) {
+    // Postman yoki mobil ilovalar uchun (origin yo'q bo'lsa ruxsat beramiz)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('❌ CORS bloklandi:', origin);
+      callback(new Error('CORS ruxsat bermadi'));
+    }
+  },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
 
 // Rate limiting
 const limiter = rateLimit({
