@@ -84,7 +84,7 @@ export function ArchLoader() {
               >
                 {/* Chap tomon: ЭТ */}
                 <div className="text-[#e54d42] relative z-10 drop-shadow-[0_0_15px_rgba(229,77,66,0.3)]" style={{ fontFamily: 'Arial, sans-serif', fontWeight: 900, fontSize: 'clamp(60px, 10vw, 150px)', lineHeight: 1, letterSpacing: '-0.02em' }}>
-                  ЭТ
+                  Дове
                 </div>
 
                 {/* O'rta: Rasm */}
@@ -103,7 +103,7 @@ export function ArchLoader() {
                 {/* O'ng tomon: ЖИ va Uy ikonkasi */}
                 <div className="flex items-center gap-2 relative z-10">
                   <div className="text-[#e54d42] drop-shadow-[0_0_15px_rgba(229,77,66,0.3)]" style={{ fontFamily: 'Arial, sans-serif', fontWeight: 900, fontSize: 'clamp(60px, 10vw, 150px)', lineHeight: 1, letterSpacing: '-0.02em' }}>
-                    ЖИ
+                    риЯ
                   </div>
                   {/* Uy ikonkasi (rasmdagi kabi) */}
                   <svg width="60" height="60" viewBox="0 0 24 24" fill="#e54d42" className="ml-2">
@@ -125,7 +125,7 @@ export function ArchLoader() {
                 className="absolute z-50 flex items-center gap-4"
               >
                 <div className="text-[#e54d42] drop-shadow-[0_0_30px_rgba(229,77,66,0.4)]" style={{ fontFamily: 'Arial, sans-serif', fontWeight: 900, fontSize: 'clamp(80px, 12vw, 200px)', lineHeight: 1, letterSpacing: '-0.02em' }}>
-                  ЭТАЖИ
+                  ДовериЯ
                 </div>
                 <svg width="80" height="80" viewBox="0 0 24 24" fill="#e54d42">
                   <path d="M12 3L2 12h3v8h5v-6h4v6h5v-8h3L12 3z" />
