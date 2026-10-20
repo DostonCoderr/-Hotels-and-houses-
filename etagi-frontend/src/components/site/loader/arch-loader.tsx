@@ -16,61 +16,49 @@ export function ArchLoader() {
   const [progress, setProgress] = useState(0);
   const [isDone, setIsDone] = useState(false);
   const [isZooming, setIsZooming] = useState(false);
-  
-  // ✅ sessionStorage ni tekshiramiz (agar oldin ko'rsatilgan bo'lsa, qayta chiqarmaymiz)
-  const [showLoader, setShowLoader] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return !sessionStorage.getItem(LOADER_KEY);
-    }
-    return true; // Serverda har doim true (hydration xatosi bo'lmasligi uchun)
-  });
+  const [showLoader, setShowLoader] = useState(true);
 
   useEffect(() => {
-    if (!showLoader) return;
-
-    let currentProgress = 0;
+    let current = 0;
     
-    // 1. Progress hisoblagich
+    // Progress tezligi
     const progressTimer = setInterval(() => {
-      currentProgress += 2;
-      if (currentProgress >= 92) {
-        clearInterval(progressTimer);
-      } else {
-        setProgress(currentProgress);
-      }
-    }, 40); // biroz tezlashtirdik
+      current += 3; // tezlashtirdik
+      if (current > 95 && !isDone) current = 95;
+      setProgress(Math.floor(current));
+    }, 30);
 
-    // 2. Rasmlarni almashtirish
+    // Rasmlar almashishi tezligi
     const imgTimer = setInterval(() => {
       setImgIndex((prev) => {
-        if (prev >= IMAGES.length - 1) {
+        if (prev === IMAGES.length - 1) {
           clearInterval(imgTimer);
           clearInterval(progressTimer);
+          
           setProgress(100);
           
-          // Animatsiya ketma-ketligi
-          setTimeout(() => setIsDone(true), 200); 
-          setTimeout(() => setIsZooming(true), 1200); 
+          // ✅ Vaqtlar qisqartirildi
+          setTimeout(() => setIsDone(true), 150);   // Dastlabki holatdan o'tish
+          setTimeout(() => setIsZooming(true), 600); // Zoom boshlanishi
           
           setTimeout(() => {
             setShowLoader(false);
             window.dispatchEvent(new Event(LOADER_EVENT));
             (window as any).__loaderDone = true;
-            try { sessionStorage.setItem(LOADER_KEY, '1'); } catch {} // Xatolik bo'lsa ham davom etadi
-          }, 2600); 
-
+            try { sessionStorage.setItem(LOADER_KEY, '1'); } catch {}
+          }, 1200); // ✅ Atigi 1.2 sekundda yopiladi (oldin 3.2 edi)
+          
           return prev;
         }
         return prev + 1;
       });
-    }, 700);
+    }, 600); // Rasmlar 0.6 sekundda almashadi
 
-    // ✅ Tozalash (agar komponent erta yopilsa)
     return () => {
       clearInterval(progressTimer);
       clearInterval(imgTimer);
     };
-  }, [showLoader]); // ⚠️ isDone emas, showLoader ga bog'landi
+  }, [isDone]);
 
   if (!showLoader) return null;
 
@@ -79,7 +67,7 @@ export function ArchLoader() {
       <motion.div
         key="loader"
         initial={{ opacity: 1 }}
-        exit={{ opacity: 0, transition: { duration: 0.5 } }}
+        exit={{ opacity: 0, transition: { duration: 0.4 } }} // Yopilish animatsiyasi tezroq
         className="fixed inset-0 z-[9999] flex flex-col justify-between overflow-hidden"
         style={{ background: 'radial-gradient(circle at center, #1a2235 0%, #070c17 100%)' }} 
       >
@@ -95,28 +83,25 @@ export function ArchLoader() {
               <motion.div 
                 key="stage-1"
                 exit={{ opacity: 0, filter: 'blur(10px)', scale: 1.1 }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: 0.3 }}
                 className="relative flex items-center justify-center gap-4"
               >
-                {/* Chap tomon: Дове */}
                 <div className="text-[#e54d42] relative z-10 drop-shadow-[0_0_15px_rgba(229,77,66,0.3)]" style={{ fontFamily: 'Arial, sans-serif', fontWeight: 900, fontSize: 'clamp(60px, 10vw, 150px)', lineHeight: 1, letterSpacing: '-0.02em' }}>
                   Дове
                 </div>
 
-                {/* O'rta: Rasm */}
                 <div className="relative z-0 mx-2" style={{ width: 'clamp(150px, 18vw, 260px)', height: 'clamp(150px, 18vw, 260px)' }}>
                   <motion.div
                     key={imgIndex}
-                    initial={{ opacity: 0, y: -50 }}
+                    initial={{ opacity: 0, y: -80 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 50 }}
-                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                    exit={{ opacity: 0, y: 80 }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     className="absolute inset-0 shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden ring-1 ring-white/10"
                     style={{ backgroundImage: `url(${IMAGES[imgIndex]})`, backgroundSize: 'cover', backgroundPosition: 'center', borderRadius: '16px' }}
                   />
                 </div>
 
-                {/* O'ng tomon: риЯ va Uy ikonkasi */}
                 <div className="flex items-center gap-2 relative z-10">
                   <div className="text-[#e54d42] drop-shadow-[0_0_15px_rgba(229,77,66,0.3)]" style={{ fontFamily: 'Arial, sans-serif', fontWeight: 900, fontSize: 'clamp(60px, 10vw, 150px)', lineHeight: 1, letterSpacing: '-0.02em' }}>
                     риЯ
@@ -136,7 +121,7 @@ export function ArchLoader() {
                 key="stage-2"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={isZooming ? { scale: 50, opacity: 1 } : { scale: 1, opacity: 1 }} 
-                transition={{ duration: isZooming ? 1.4 : 0.5, ease: isZooming ? [0.76, 0, 0.24, 1] : 'easeOut' }}
+                transition={{ duration: isZooming ? 0.8 : 0.3, ease: isZooming ? [0.76, 0, 0.24, 1] : 'easeOut' }}
                 className="absolute z-50 flex items-center gap-4"
               >
                 <div className="text-[#e54d42] drop-shadow-[0_0_30px_rgba(229,77,66,0.4)]" style={{ fontFamily: 'Arial, sans-serif', fontWeight: 900, fontSize: 'clamp(80px, 12vw, 200px)', lineHeight: 1, letterSpacing: '-0.02em' }}>
