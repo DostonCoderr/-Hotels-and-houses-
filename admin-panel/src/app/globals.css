@@ -1,0 +1,437 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   BASE — ROOT VARIABLES
+   ============================================================ */
+@layer base {
+  :root {
+    /* ============================================================
+       LIGHT MODE — Yog'och palitra (Dizayn 2)
+       ============================================================ */
+    --background: 40 33% 94%;          /* #F5F0E8 — krem fon */
+    --foreground: 0 0% 10%;             /* #1A1A1A — to'q matn */
+
+    --card: 0 0% 100%;                  /* Oq kartochkalar */
+    --card-foreground: 0 0% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+
+    --primary: 30 24% 44%;              /* #8B7355 — yog'och jigarrang */
+    --primary-foreground: 40 33% 98%;
+
+    --secondary: 40 20% 88%;            /* #E8E0D5 — och krem */
+    --secondary-foreground: 0 0% 10%;
+
+    --muted: 40 20% 88%;
+    --muted-foreground: 30 10% 40%;
+
+    --accent: 30 24% 44%;
+    --accent-foreground: 40 33% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 35 15% 88%;               /* #D4C9B8 */
+    --input: 35 20% 78%;
+    --ring: 30 24% 44%;
+
+    --radius: 0.75rem;
+
+    /* Charts */
+    --chart-1: 30 24% 44%;
+    --chart-2: 40 33% 65%;
+    --chart-3: 20 40% 55%;
+    --chart-4: 45 30% 70%;
+    --chart-5: 10 50% 60%;
+
+    /* Orange (accent uchun) */
+    --orange-500: 25 95% 53%;
+    --orange-600: 21 90% 48%;
+    --orange-700: 17 88% 40%;
+
+    /* ============================================================
+       SIDEBAR & HEADER (Light)
+       ============================================================ */
+    --sidebar-bg: 0 0% 100%;
+    --sidebar-border: 40 15% 90%;
+    --sidebar-text: 0 0% 20%;
+    --sidebar-text-muted: 0 0% 50%;
+    --sidebar-hover: 40 20% 94%;
+    --sidebar-active: 30 24% 44%;
+
+    --header-bg: 0 0% 100%;
+    --header-border: 40 15% 90%;
+    --header-text: 0 0% 15%;
+  }
+
+  /* ============================================================
+     DARK MODE — Yog'och palitra
+     ============================================================ */
+  .dark {
+    --background: 0 0% 5%;              /* #0D0D0D */
+    --foreground: 40 33% 94%;           /* #F5F0E8 */
+
+    --card: 0 0% 8%;                    /* #141414 */
+    --card-foreground: 40 33% 94%;
+
+    --popover: 0 0% 8%;
+    --popover-foreground: 40 33% 94%;
+
+    --primary: 30 35% 55%;              /* #A88868 — yorqinroq yog'och */
+    --primary-foreground: 0 0% 5%;
+
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 40 33% 94%;
+
+    --muted: 0 0% 12%;
+    --muted-foreground: 40 10% 60%;
+
+    --accent: 30 35% 55%;
+    --accent-foreground: 0 0% 5%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 12%;
+    --input: 0 0% 15%;
+    --ring: 30 35% 55%;
+
+    /* Charts */
+    --chart-1: 30 35% 55%;
+    --chart-2: 40 33% 65%;
+    --chart-3: 20 40% 55%;
+    --chart-4: 45 30% 70%;
+    --chart-5: 10 50% 60%;
+
+    /* ============================================================
+       SIDEBAR & HEADER (Dark)
+       ============================================================ */
+    --sidebar-bg: 0 0% 3%;
+    --sidebar-border: 0 0% 10%;
+    --sidebar-text: 40 33% 94%;
+    --sidebar-text-muted: 0 0% 55%;
+    --sidebar-hover: 0 0% 8%;
+    --sidebar-active: 30 35% 55%;
+
+    --header-bg: 0 0% 3%;
+    --header-border: 0 0% 10%;
+    --header-text: 40 33% 94%;
+  }
+
+  /* ============================================================
+     SIDEBAR STYLES (data attribute)
+     ============================================================ */
+  [data-sidebar='dark'] {
+    --sidebar-bg: 0 0% 3%;
+    --sidebar-text: 40 33% 94%;
+    --sidebar-text-muted: 0 0% 55%;
+    --sidebar-hover: 0 0% 8%;
+  }
+
+  [data-sidebar='light'] {
+    --sidebar-bg: 0 0% 100%;
+    --sidebar-text: 0 0% 15%;
+    --sidebar-text-muted: 0 0% 45%;
+    --sidebar-hover: 40 20% 94%;
+  }
+
+  [data-sidebar='gradient'] {
+    --sidebar-bg: 0 0% 3%;
+    --sidebar-text: 40 33% 94%;
+    --sidebar-text-muted: 0 0% 60%;
+    --sidebar-hover: 0 0% 8%;
+  }
+}
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Smooth transitions for theme change */
+  * {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
+  }
+
+  /* Sidebar & Header transitions */
+  aside,
+  header {
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary));
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+/* Float */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  33% { transform: translateY(-20px) translateX(10px); }
+  66% { transform: translateY(20px) translateX(-10px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Gradient shift */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* Shimmer */
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+/* Pulse ring */
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+/* Pulse glow */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px hsl(var(--primary) / 0.4); }
+  50% { box-shadow: 0 0 40px hsl(var(--primary) / 0.7); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Spin slow */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+/* Fade in up */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out;
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
+/* Glass morphism */
+.glass {
+  background: hsl(var(--card) / 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid hsl(var(--border) / 0.5);
+}
+
+.glass-dark {
+  background: hsl(var(--card) / 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid hsl(var(--border) / 0.3);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary)) 0%,
+    hsl(var(--primary) / 0.7) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Orange gradient text */
+.gradient-text-orange {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--orange-500)) 0%,
+    hsl(var(--orange-700)) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Card hover */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 40px hsl(var(--primary) / 0.15);
+}
+
+/* Sidebar custom */
+.sidebar-bg {
+  background: hsl(var(--sidebar-bg));
+  border-color: hsl(var(--sidebar-border));
+}
+
+.sidebar-text {
+  color: hsl(var(--sidebar-text));
+}
+
+.sidebar-text-muted {
+  color: hsl(var(--sidebar-text-muted));
+}
+
+.sidebar-hover:hover {
+  background: hsl(var(--sidebar-hover));
+}
+
+/* Header custom */
+.header-bg {
+  background: hsl(var(--header-bg) / 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: hsl(var(--header-border));
+}
+
+.header-text {
+  color: hsl(var(--header-text));
+}
+
+/* ============================================================
+   RECHARTS CUSTOM
+   ============================================================ */
+.recharts-cartesian-grid line {
+  stroke: hsl(var(--border));
+}
+
+.recharts-text {
+  fill: hsl(var(--muted-foreground));
+  font-size: 12px;
+}
+
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+/* ============================================================
+   CUSTOM SELECTION
+   ============================================================ */
+::selection {
+  background: hsl(var(--primary) / 0.3);
+  color: hsl(var(--foreground));
+}
+
+/* ============================================================
+   FOCUS
+   ============================================================ */
+*:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+
+/* ============================================================
+   PROPERTY SWIPER (uylar orasida)
+   ============================================================ */
+
+.property-swiper-main {
+  width: 100%;
+  height: 100%;
+}
+
+/* Pagination (dots — uylar soni) */
+.property-swiper-pagination {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.property-swiper-pagination .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 1;
+  transition: all 0.3s ease;
+  border-radius: 9999px;
+  margin: 0 !important;
+}
+
+.property-swiper-pagination .swiper-pagination-bullet-active {
+  background: white;
+  width: 24px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Default nav yashirish */
+.property-swiper-main .swiper-button-prev,
+.property-swiper-main .swiper-button-next {
+  display: none !important;
+}
+
+/* Smooth creative effect */
+.property-swiper-main .swiper-slide {
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.property-swiper-main .swiper-slide-shadow {
+  background: rgba(0, 0, 0, 0.2) !important;
+}

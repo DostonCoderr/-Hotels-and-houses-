@@ -1,0 +1,195 @@
+/* ===== Lenis (silliq scroll) uchun majburiy qoidalar ===== */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-scrolling iframe { pointer-events: none; }
+
+/* ===== Rasm parallaksi uchun konteyner kesilishi ===== */
+.jr .im, .team-grid .av2, .swiper-slide .im { overflow: hidden; }
+
+/* ===== Slayder: sudrash ===== */
+.swiper-wrapper { cursor: grab; }
+.swiper-wrapper img { -webkit-user-drag: none; user-select: none; }
+
+/* ===== Header scroll holati ===== */
+header.is-scrolled {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* ===== Xarita ===== */
+.custom-marker.active { animation: markerPulse 1.4s ease-out infinite; }
+@keyframes markerPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(201, 163, 106, 0.65); }
+  100% { box-shadow: 0 0 0 22px rgba(201, 163, 106, 0); }
+}
+/* `translate` alohida property: elementning o'z transform'ini buzmaydi */
+.map-hint { animation: hintFloat 3s ease-in-out infinite; }
+@keyframes hintFloat {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -6px; }
+}
+
+/* ===== "Смотреть видео" tugmasidagi pulsatsiya ===== */
+.vd .pl { position: relative; }
+.vd .pl::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  animation: plRing 2s ease-out infinite;
+}
+@keyframes plRing {
+  from { transform: scale(1); opacity: 0.7; }
+  to   { transform: scale(1.9); opacity: 0; }
+}
+
+/* ===== AdBanner progress ===== */
+@keyframes adfill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ========================================================= */
+/* LIGHT MODE DIZAYNI (To'liq tuzatilgan)                    */
+/* ========================================================= */
+
+:root[data-theme="light"] {
+  --bg: #f7f3ea;       
+  --bg2: #ffffff;      
+  --cd: #ffffff;       
+  --bd: rgba(40, 30, 10, 0.1); 
+  --tx: #1c1a16;       
+  --mu: #6b6556;       
+  --g: #a9793a;        
+  --g2: #8a5f27;
+  --og: #ffffff;       
+}
+
+/* 1. HERO QISMI: Matnlarni OQ qilamiz va orqasiga qora soya beramiz */
+:root[data-theme="light"] .hero::after {
+  /* Chapdan o'ngga qorong'ulik (matnlar ko'rinishi uchun) */
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%) !important;
+}
+
+/* Hero ichidagi barcha matnlarni majburan oq qilamiz */
+:root[data-theme="light"] .hero .eb,
+:root[data-theme="light"] .hero h1,
+:root[data-theme="light"] .hero .tx p {
+  color: #ffffff !important; 
+  text-shadow: 0 4px 20px rgba(0,0,0,0.5) !important; /* Matn orqasiga soya */
+}
+
+:root[data-theme="light"] .hero h1 em {
+  color: var(--g2) !important; /* "место" so'zi oltin rangda qoladi */
+  text-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+}
+
+/* "Смотреть видео" tugmasini oq qilamiz */
+:root[data-theme="light"] .vd {
+  color: #ffffff !important;
+}
+:root[data-theme="light"] .vd .pl {
+  border-color: #ffffff !important;
+  color: var(--g2) !important;
+}
+
+/* Glass (Kvartal Metronom) kartochkasi - Oq bo'lib qoladi */
+:root[data-theme="light"] .glass {
+  background: rgba(255, 255, 255, 0.95) !important; 
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  color: var(--tx) !important; 
+}
+:root[data-theme="light"] .glass h3 { color: var(--tx) !important; }
+:root[data-theme="light"] .glass > div:first-child { color: var(--g2) !important; }
+:root[data-theme="light"] .glass > div:nth-child(3) { color: var(--mu) !important; }
+:root[data-theme="light"] .glass .glass-price { color: var(--g2) !important; }
+
+/* 2. Qidiruv paneli (SearchPanel) */
+:root[data-theme="light"] .sp {
+  background: #ffffff;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+}
+:root[data-theme="light"] .t {
+  background: #f9f7f2;
+  border: 1px solid var(--bd);
+}
+:root[data-theme="light"] .t:hover {
+  background: #ffffff;
+  border-color: var(--g);
+}
+
+/* 3. Swiper va boshqa tugmalar */
+:root[data-theme="light"] .swiper-btn {
+  background: #1a2235;
+  border-color: #1a2235;
+  color: #ffffff;
+}
+:root[data-theme="light"] .swiper-btn:hover {
+  background: var(--g);
+  color: #ffffff;
+}
+
+/* 4. Footer blokidagi elementlar */
+:root[data-theme="light"] .ft-social a {
+  background: #ffffff;
+  border-color: var(--bd);
+  color: var(--mu);
+}
+
+/* 5. Kartochkalar (Swiper, Grid) */
+:root[data-theme="light"] .swiper-slide,
+:root[data-theme="light"] .cd {
+  background: #ffffff;
+  border: 1px solid var(--bd);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
+}
+:root[data-theme="light"] .swiper-slide .cb h3,
+:root[data-theme="light"] .cd .cb h3 {
+  color: var(--tx);
+}
+
+/* Leaflet Tooltip dizayni (qorong'i) */
+.leaflet-tooltip.custom-tooltip {
+  background: #1a2235 !important; /* To'q ko'k fon */
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  padding: 10px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+  color: #f2eee5 !important;
+}
+
+/* Tooltip strelkasi (pastdagi uchburchak) */
+.leaflet-tooltip-top.custom-tooltip::before {
+  border-top-color: #1a2235 !important;
+}
+.leaflet-tooltip-bottom.custom-tooltip::before {
+  border-bottom-color: #1a2235 !important;
+}
+.leaflet-tooltip-left.custom-tooltip::before {
+  border-left-color: #1a2235 !important;
+}
+.leaflet-tooltip-right.custom-tooltip::before {
+  border-right-color: #1a2235 !important;
+}
+
+/* Tooltip ichidagi matnlarni oq qilish */
+.leaflet-tooltip.custom-tooltip b {
+  color: #f2eee5 !important;
+}
+.leaflet-tooltip.custom-tooltip div {
+  color: #98a1b4 !important;
+}

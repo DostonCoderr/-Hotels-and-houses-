@@ -1,0 +1,25 @@
+@import url('/site/css/style.css');
+@import url('/site/css/novostroyki.css');
+@import url('/site/css/novostroyki-detail.css');
+@import url('/site/css/stroitelstvo.css');
+@import url('/site/css/project.css');
+@import url('/site/css/commercial.css');
+@import url('/site/css/commercial-detail.css');
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap');
+@import url('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
+@import url('https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css');
+@import url('https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css');
+
+.nzd-main {
+  overflow: visible !important; /* Sticky ishlashi uchun */
+}
+
+.nzd-nav {
+  position: sticky;
+  top: 68px;
+  z-index: 40;
+  background: color-mix(in srgb, var(--bg2) 94%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--bd);
+}

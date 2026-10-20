@@ -1,0 +1,404 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================================
+// ADMIN VA ROLLAR
+// ============================================================
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @relation(fields: [roleId], references: [id])
+  roleId    Int
+  active    Boolean  @default(true)
+
+  avatar    String?
+  phone     String?
+  position  String?
+  address   String?
+
+  
+  logs      ActivityLog[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  permissions String[]
+  admins      Admin[]
+  createdAt   DateTime @default(now())
+}
+
+// ============================================================
+// FOYDALANUVCHILAR
+// ============================================================
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  password     String
+  phone        String?
+  blocked      Boolean  @default(false)
+  favorites    Favorite[]
+  views        ViewingHistory[]
+  applications Application[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// ============================================================
+// ЖК (Жилой Комплекс)
+// ============================================================
+
+model ResidentialComplex {
+  id             Int      @id @default(autoincrement())
+  name           String
+  slug           String   @unique
+  description    String   @db.Text
+  address        String
+  district       String
+  builder        String
+  completionYear Int
+  status         String   @default("building")
+  buildings      Int      @default(1)
+  floors         Int
+  infrastructure String[]
+  advantages     String[]
+  minPrice       BigInt
+  maxPrice       BigInt
+  lat            Float
+  lng            Float
+  published      Boolean  @default(true)
+  properties     Property[]
+  images         Image[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// ============================================================
+// OBYEKT TURLARI
+// ============================================================
+
+model PropertyType {
+  id         Int        @id @default(autoincrement())
+  name       String     @unique
+  slug       String     @unique
+  properties Property[]
+  createdAt  DateTime   @default(now())
+}
+
+// ============================================================
+// OBYEKTLAR
+// ============================================================
+
+model Property {
+  id          Int                 @id @default(autoincrement())
+  name        String
+  slug        String              @unique
+  type        PropertyType        @relation(fields: [typeId], references: [id])
+  typeId      Int
+  complex     ResidentialComplex? @relation(fields: [complexId], references: [id])
+  complexId   Int?
+  apartmentNo String?
+  rooms       Int
+  area        Float
+  floor       Int
+  floorsTotal Int
+  price       BigInt
+  priceM2     BigInt
+  oldPrice    BigInt?
+  discount    Int?
+  status      String              @default("available")
+  description String              @db.Text
+  address     String
+  lat         Float
+  lng         Float
+  features    String[]            // "Балкон", "Лифт"
+  advantages  String[]            // "Рядом метро"
+  published   Boolean             @default(true)
+
+
+  imo         String?             // "ЖК"
+  wall        String?             // "Монолит"
+  cls         String?             // "Комфорт"
+  metro       String?             // "Чилонзор"
+  metroTime   String?             // "8 мин"
+  metroDist   String?             // "0.6 км"
+  videoUrl    String?             // Videolar ro'yxati
+  videos      Json?
+  genplan     Json?               // Genplan ma'lumoti
+
+
+  images      Image[]
+  favorites   Favorite[]
+  views       ViewingHistory[]
+  applications Application[]
+  promotions  Promotion[]
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  paymentMethods  String?   // "Способы оплаты" uchun matn
+  similarOffers   String?   // "Похожие предложения" uchun matn
+
+
+  completionDate    String?   // "1 кв. 2024" (Срок сдачи)
+  constructionStatus String?  // "1 квартал, Метроном" (Ход строительства)
+  reviewsCount      Int?      @default(0) // 1 отзыв
+  rating            Float?    @default(5.0) // 4.8
+  declarations      Json?     // Proektnye deklaratsii (fayllar)
+  progressPhotos    Json?     // Ход строительства (rasmlar)
+}
+// ============================================================
+// RASMLAR
+// ============================================================
+
+model Image {
+  id          Int                 @id @default(autoincrement())
+  url         String
+  alt         String?
+  order       Int                 @default(0)
+  isMain      Boolean             @default(false)
+  property    Property?           @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId  Int?
+  complex     ResidentialComplex? @relation(fields: [complexId], references: [id], onDelete: Cascade)
+  complexId   Int?
+  createdAt   DateTime            @default(now())
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId   Int?
+}
+
+// ============================================================
+// IZBRANNOE
+// ============================================================
+
+model Favorite {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId Int
+  createdAt  DateTime @default(now())
+  @@unique([userId, propertyId])
+}
+
+// ============================================================
+// KO'RISH TARIXI
+// ============================================================
+
+model ViewingHistory {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId Int
+  viewedAt   DateTime @default(now())
+}
+
+// ============================================================
+// ZAYAVKALAR
+// ============================================================
+
+model Application {
+  id         Int       @id @default(autoincrement())
+  type       String
+  name       String
+  phone      String
+  email      String?
+  message    String?   @db.Text
+  property   Property? @relation(fields: [propertyId], references: [id])
+  propertyId Int?
+  project    Project?  @relation(fields: [projectId], references: [id]) // ✅ YANGI
+  projectId  Int?      // ✅ YANGI
+  user       User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId     Int?
+  source     String    @default("site")
+  status     String    @default("new")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+// ============================================================
+// AKSIYALAR
+// ============================================================
+
+model Promotion {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String     @db.Text
+  image       String?
+  discount    Int?
+  startDate   DateTime
+  endDate     DateTime
+  status      String     @default("active")
+  properties  Property[]
+  createdAt   DateTime   @default(now())
+}
+
+// ============================================================
+// SHARHLAR
+// ============================================================
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  name      String
+  photo     String?
+  text      String   @db.Text
+  rating    Int
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// ============================================================
+// XODIMLAR
+// ============================================================
+
+model Employee {
+  id          Int      @id @default(autoincrement())
+  name        String
+  position    String
+  photo       String?
+  phone       String?
+  email       String?
+  description String?  @db.Text
+  hidden      Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+// ============================================================
+// IPOTEKA
+// ============================================================
+
+model MortgageProgram {
+  id          Int      @id @default(autoincrement())
+  bank        String
+  rate        Float
+  downPayment Int
+  term        Int
+  minAmount   BigInt
+  conditions  String?  @db.Text
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+// ============================================================
+// SOZLAMALAR
+// ============================================================
+
+model Setting {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String   @db.Text
+  group     String
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+// SEO
+// ============================================================
+
+model Seo {
+  id            Int      @id @default(autoincrement())
+  page          String   @unique
+  title         String
+  description   String
+  keywords      String?
+  ogTitle       String?
+  ogDescription String?
+  ogImage       String?
+  slug          String?
+  updatedAt     DateTime @updatedAt
+}
+
+// ============================================================
+// JURNAL
+// ============================================================
+
+model ActivityLog {
+  id        Int      @id @default(autoincrement())
+  admin     Admin    @relation(fields: [adminId], references: [id])
+  adminId   Int
+  action    String
+  entity    String
+  entityId  Int?
+  details   String?  @db.Text
+  ip        String?
+  createdAt DateTime @default(now())
+}
+
+
+// ============================================================
+// Notification
+// ============================================================
+
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  adminId   Int?     // Kimga tegishli (null bo'lsa hamma adminlarga)
+  title     String
+  message   String   @db.Text
+  type      String   @default("system") // application, user, system, success
+  link      String?  // Bosilganda qayerga o'tishi (/applications)
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([adminId])
+  @@index([isRead])
+}
+
+
+// ============================================================
+// ПРОЕКТЫ ДОМОВ (Строительство)
+// ============================================================
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String   @unique
+  description String   @db.Text
+  price       BigInt   // Базовая цена
+  area        Float
+  floors      Int
+  bedrooms    Int      // Комнат
+  bathrooms   Int      // Санузлов
+  material    String
+  style       String?
+  category    String   @default("project")
+  
+  // 🔥 YANGI MAYDONLAR (Skrinshotlar uchun)
+  terassa     Boolean  @default(false) // Терраса
+  wallHeight  Float?   // Высота стен (2.7 м)
+  foundation  String?  // Фундамент (Винтовые сваи)
+  roof        String?  // Кровля (Металлочерепица)
+  kitchenArea Float?   // Площадь кухни-гостиной
+
+  // О компании
+  companyName String?  // Barn House Co
+  companyExp  Int?     // Опыт работы (2015)
+  companyDesc String?  @db.Text
+  applications Application[]
+
+  // Комплектации (JSON massiv)
+  // [{"name": "Холодный контур", "price": 0, "desc": "от базовой цены"}, ...]
+  packages    Json?    
+
+  features    String[] 
+  published   Boolean  @default(true)
+  images      Image[]  
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

@@ -1,0 +1,540 @@
+### ============================================
+### ETAGI BACKEND — TO'LIQ TEST (YANGILANGAN)
+### ============================================
+
+@baseUrl = http://localhost:5000/api
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoxLCJlbWFpbCI6ImFkbWluQGV0YWdpLnJ1Iiwicm9sZSI6InN1cGVyX2FkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNzkxNzE1MDgwLCJleHAiOjE3OTIzMTk4ODB9.NAPBp-YihcsrFlK2gW9pj6qEUQP9X8ZqYS1sGw_Ne_M
+@userToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZGVtb0BldGFnaS5ydSIsImlhdCI6MTc5MTcxNTA2NCwiZXhwIjoxNzkyMzE5ODY0fQ.ALEWpvDBH_X_FIDphBPq9wtWjU3HJc-w6ljFqpiMTTM
+
+### ============================================
+### 1. AUTH
+### ============================================
+
+### 1.1 Register (yangi user)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "test@etagi.ru",
+  "password": "test1234",
+  "phone": "+998901234567"
+}
+
+### 1.2 Login (demo user)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "demo@etagi.ru",
+  "password": "demo1234"
+}
+
+### 1.3 Admin Login
+POST {{baseUrl}}/auth/admin/login
+Content-Type: application/json
+
+{
+  "email": "admin@etagi.ru",
+  "password": "admin123"
+}
+
+### 1.4 Me (user token bilan)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{userToken}}
+
+### 1.5 Admin Me
+GET {{baseUrl}}/auth/admin/me
+Authorization: Bearer {{adminToken}}
+
+### 1.6 Logout
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{userToken}}
+
+### ============================================
+### 2. PROPERTIES
+### ============================================
+
+### 2.1 Barcha properties
+GET {{baseUrl}}/properties?page=1&limit=10
+
+### 2.2 Bitta property (ID=1)
+GET {{baseUrl}}/properties/1
+
+### 2.3 Property yaratish (admin) — TO'G'RI
+POST {{baseUrl}}/properties/admin
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Yangi kvartira test",
+  "slug": "yangi-kvartira-test-1",
+  "typeId": 1,
+  "complexId": 1,
+  "apartmentNo": "777",
+  "rooms": 3,
+  "area": 75.5,
+  "floor": 5,
+  "floorsTotal": 9,
+  "price": 55000,
+  "priceM2": 728,
+  "status": "available",
+  "description": "Zo'r kvartira, test uchun",
+  "address": "Toshkent, Chilonzor",
+  "lat": 41.276418,
+  "lng": 69.203505,
+  "features": ["Balkon", "Lift"],
+  "advantages": ["Yangi bino"],
+  "published": true
+}
+
+### 2.4 Property update (ID=1)
+PUT {{baseUrl}}/properties/admin/1
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "price": 60000
+}
+
+### 2.5 Property duplicate (ID=1)
+POST {{baseUrl}}/properties/admin/1/duplicate
+Authorization: Bearer {{adminToken}}
+
+### 2.6 Property delete — ehtiyot bo'ling (ID=7 yangi yaratilgan)
+DELETE {{baseUrl}}/properties/admin/10
+Authorization: Bearer {{adminToken}}
+
+### ============================================
+### 3. COMPLEXES
+### ============================================
+
+### 3.1 Barcha complexes
+GET {{baseUrl}}/complexes?page=1&limit=10
+
+### 3.2 Bitta complex (ID=1)
+GET {{baseUrl}}/complexes/1
+
+### 3.3 Slug bo'yicha
+GET {{baseUrl}}/complexes/slug/etagi-tower
+
+### 3.4 Complex stats (ID=1)
+GET {{baseUrl}}/complexes/1/stats
+
+### 3.5 Complex yaratish — TO'G'RI
+POST {{baseUrl}}/complexes/admin
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Yangi Complex Test",
+  "slug": "yangi-complex-test",
+  "description": "Yangi turar-joy majmuasi test uchun",
+  "address": "Toshkent, Yunusobod",
+  "district": "Yunusobod",
+  "builder": "Test Builder",
+  "completionYear": 2027,
+  "status": "building",
+  "buildings": 2,
+  "floors": 20,
+  "infrastructure": ["Maktab", "Bog'cha"],
+  "advantages": ["Yangi", "Markazda"],
+  "minPrice": 50000,
+  "maxPrice": 150000,
+  "lat": 41.311081,
+  "lng": 69.240562,
+  "published": true
+}
+
+### 3.6 Complex toggle (ID=1)
+POST {{baseUrl}}/complexes/admin/1/toggle
+Authorization: Bearer {{adminToken}}
+
+### ============================================
+### 4. USERS (ADMIN)
+### ============================================
+
+### 4.1 Barcha users
+GET {{baseUrl}}/users?page=1&limit=10
+Authorization: Bearer {{adminToken}}
+
+### 4.2 Users stats
+GET {{baseUrl}}/users/stats
+Authorization: Bearer {{adminToken}}
+
+### 4.3 Bitta user (ID=1)
+GET {{baseUrl}}/users/1
+Authorization: Bearer {{adminToken}}
+
+### 4.4 User favorites
+GET {{baseUrl}}/users/1/favorites
+Authorization: Bearer {{adminToken}}
+
+### 4.5 User views
+GET {{baseUrl}}/users/1/views
+Authorization: Bearer {{adminToken}}
+
+### 4.6 User applications
+GET {{baseUrl}}/users/1/applications
+Authorization: Bearer {{adminToken}}
+
+### 4.7 User block (ID=2)
+POST {{baseUrl}}/users/2/block
+Authorization: Bearer {{adminToken}}
+
+### 4.8 User unblock (ID=2)
+POST {{baseUrl}}/users/2/unblock
+Authorization: Bearer {{adminToken}}
+
+### ============================================
+### 5. APPLICATIONS
+### ============================================
+
+### 5.1 Application yaratish (public) — TO'G'RI
+POST {{baseUrl}}/applications
+Content-Type: application/json
+
+{
+  "type": "consultation",
+  "name": "Ali Valiyev",
+  "phone": "+998901234567",
+  "email": "ali@mail.ru",
+  "message": "Kvartira haqida so'ramoqchiman",
+  "propertyId": 1,
+  "source": "site"
+}
+
+### 5.2 Barcha applications (admin)
+GET {{baseUrl}}/applications?page=1&limit=10
+Authorization: Bearer {{adminToken}}
+
+### 5.3 Applications stats
+GET {{baseUrl}}/applications/stats
+Authorization: Bearer {{adminToken}}
+
+### 5.4 Bitta application (ID=1)
+GET {{baseUrl}}/applications/1
+Authorization: Bearer {{adminToken}}
+
+### 5.5 Status yangilash
+PUT {{baseUrl}}/applications/1/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "in_work"
+}
+
+### ============================================
+### 6. FAVORITES
+### ============================================
+
+### 6.1 Mening favorites
+GET {{baseUrl}}/favorites
+Authorization: Bearer {{userToken}}
+
+### 6.2 Favorites IDs
+GET {{baseUrl}}/favorites/ids
+Authorization: Bearer {{userToken}}
+
+### 6.3 Favorite qo'shish
+POST {{baseUrl}}/favorites
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "propertyId": 1
+}
+
+### 6.4 Favorite toggle
+POST {{baseUrl}}/favorites/1/toggle
+Authorization: Bearer {{userToken}}
+
+### 6.5 Favorite o'chirish
+DELETE {{baseUrl}}/favorites/1
+Authorization: Bearer {{userToken}}
+
+### 6.6 Top favorites (admin)
+GET {{baseUrl}}/favorites/top
+Authorization: Bearer {{adminToken}}
+
+### ============================================
+### 7. HISTORY
+### ============================================
+
+### 7.1 Mening history
+GET {{baseUrl}}/history
+Authorization: Bearer {{userToken}}
+
+### 7.2 History qo'shish
+POST {{baseUrl}}/history
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "propertyId": 1
+}
+
+### 7.3 History o'chirish
+DELETE {{baseUrl}}/history/1
+Authorization: Bearer {{userToken}}
+
+### 7.4 Hammasini o'chirish
+DELETE {{baseUrl}}/history
+Authorization: Bearer {{userToken}}
+
+### 7.5 Most viewed (admin)
+GET {{baseUrl}}/history/most-viewed
+Authorization: Bearer {{adminToken}}
+
+### ============================================
+### 8. UPLOAD
+### ============================================
+
+### 8.1 Property image upload
+POST {{baseUrl}}/upload/properties/1/images
+Authorization: Bearer {{adminToken}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="images"; filename="test.png"
+Content-Type: image/png
+
+< ./test.png
+------WebKitFormBoundary--
+
+### ============================================
+### 9. STATS
+### ============================================
+
+### 9.1 Dashboard
+GET {{baseUrl}}/stats/dashboard?period=7d
+Authorization: Bearer {{adminToken}}
+
+### 9.2 Chart
+GET {{baseUrl}}/stats/chart?period=30d
+Authorization: Bearer {{adminToken}}
+
+### 9.3 Top properties
+GET {{baseUrl}}/stats/top/properties
+Authorization: Bearer {{adminToken}}
+
+### 9.4 Top complexes
+GET {{baseUrl}}/stats/top/complexes
+Authorization: Bearer {{adminToken}}
+
+### 9.5 Applications by type
+GET {{baseUrl}}/stats/applications/by-type
+Authorization: Bearer {{adminToken}}
+
+### 9.6 Applications by status
+GET {{baseUrl}}/stats/applications/by-status
+Authorization: Bearer {{adminToken}}
+
+### 9.7 Properties by type
+GET {{baseUrl}}/stats/properties/by-type
+Authorization: Bearer {{adminToken}}
+
+### 9.8 Price stats
+GET {{baseUrl}}/stats/price
+Authorization: Bearer {{adminToken}}
+
+### 9.9 Recent
+GET {{baseUrl}}/stats/recent
+Authorization: Bearer {{adminToken}}
+
+### 9.10 Logs
+GET {{baseUrl}}/stats/logs
+Authorization: Bearer {{adminToken}}
+
+### ============================================
+### 10. PROMOTIONS
+### ============================================
+
+### 10.1 Barcha promotions
+GET {{baseUrl}}/promotions
+
+### 10.2 Bitta promotion (ID=1)
+GET {{baseUrl}}/promotions/1
+
+### 10.3 Promotion yaratish — TO'G'RI
+POST {{baseUrl}}/promotions/admin
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Yangi aksiya test",
+  "description": "10% chegirma barcha kvartiralarga",
+  "discount": 10,
+  "startDate": "2026-10-01",
+  "endDate": "2026-12-31",
+  "status": "active"
+}
+
+### 10.4 Promotion update (ID=1)
+PUT {{baseUrl}}/promotions/admin/1
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "discount": 15
+}
+
+### 10.5 Promotion toggle (ID=1)
+POST {{baseUrl}}/promotions/admin/1/toggle
+Authorization: Bearer {{adminToken}}
+
+### 10.6 Promotion delete (ID=3 — test uchun yaratilgan)
+DELETE {{baseUrl}}/promotions/admin/3
+Authorization: Bearer {{adminToken}}
+
+### ============================================
+### 11. REVIEWS
+### ============================================
+
+### 11.1 Barcha reviews (public)
+GET {{baseUrl}}/reviews?page=1&limit=10
+
+### 11.2 Review yozish (public)
+POST {{baseUrl}}/reviews
+Content-Type: application/json
+
+{
+  "name": "Aziz Test",
+  "rating": 5,
+  "text": "Zo'r xizmat! Test uchun yozilgan sharh."
+}
+
+### 11.3 Barcha reviews (admin)
+GET {{baseUrl}}/reviews/admin
+Authorization: Bearer {{adminToken}}
+
+### 11.4 Review publish (ID=4 — test uchun yaratilgan)
+PUT {{baseUrl}}/reviews/admin/4/publish
+Authorization: Bearer {{adminToken}}
+
+### 11.5 Review delete (ID=4)
+DELETE {{baseUrl}}/reviews/admin/3
+Authorization: Bearer {{adminToken}}
+
+### ============================================
+### 12. EMPLOYEES
+### ============================================
+
+### 12.1 Barcha employees (public)
+GET {{baseUrl}}/employees
+
+### 12.2 Bitta employee (ID=1)
+GET {{baseUrl}}/employees/1
+
+### 12.3 Employee yaratish (photo YO'Q)
+POST {{baseUrl}}/employees/admin
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Sardor Test",
+  "position": "Menejer",
+  "phone": "+998901234567",
+  "email": "sardor.test@etagi.ru",
+  "description": "Test xodim",
+  "hidden": false,
+  "order": 10
+}
+
+### 12.4 Employee update (ID=1)
+PUT {{baseUrl}}/employees/admin/1
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "position": "Katta menejer"
+}
+
+### 12.5 Employee reorder
+POST {{baseUrl}}/employees/admin/reorder
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "order": [
+    { "id": 1, "order": 3 },
+    { "id": 2, "order": 1 },
+    { "id": 3, "order": 2 }
+  ]
+}
+
+### 12.6 Employee delete (ID=4 — test uchun yaratilgan)
+DELETE {{baseUrl}}/employees/admin/4
+Authorization: Bearer {{adminToken}}
+
+### ============================================
+### 13. SETTINGS
+### ============================================
+
+### 13.1 Barcha settings
+GET {{baseUrl}}/settings
+Authorization: Bearer {{adminToken}}
+
+### 13.2 Bitta setting
+GET {{baseUrl}}/settings/site_name
+Authorization: Bearer {{adminToken}}
+
+### 13.3 Setting yangilash
+PUT {{baseUrl}}/settings/site_name
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "value": "Etaji"
+}
+
+### 13.4 Bulk update
+PUT {{baseUrl}}/settings
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "settings": [
+    { "key": "site_name", "value": "Etaji" },
+    { "key": "phone", "value": "+998712000000" }
+  ]
+}
+
+### ============================================
+### 14. SEO
+### ============================================
+
+### 14.1 Barcha SEO
+GET {{baseUrl}}/seo
+Authorization: Bearer {{adminToken}}
+
+### 14.2 SEO by page (public)
+GET {{baseUrl}}/seo/page/home
+
+### 14.3 SEO yangilash
+PUT {{baseUrl}}/seo/page/home
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "title": "Etaji — Ko'chmas mulk",
+  "description": "O'zbekistondagi eng yaxshi ko'chmas mulk sayti",
+  "keywords": "ko'chmas mulk, kvartira, uy"
+}
+
+### ============================================
+### 15. LOGS
+### ============================================
+
+### 15.1 Barcha logs
+GET {{baseUrl}}/logs?page=1&limit=50
+Authorization: Bearer {{adminToken}}
+
+### 15.2 Logs stats
+GET {{baseUrl}}/logs/stats
+Authorization: Bearer {{adminToken}}
+
+### 15.3 Eski loglarni tozalash
+DELETE {{baseUrl}}/logs/clear?days=30
+Authorization: Bearer {{adminToken}}

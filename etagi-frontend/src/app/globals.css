@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Mobil moslashuv (Responsive) */
+@media (max-width: 768px) {
+  .hero { min-height: 500px !important; height: auto !important; padding-bottom: 60px; }
+  .hero .w { flex-direction: column; align-items: flex-start; justify-content: center; }
+  .hero .glass { display: none; } /* Mobil telefonda shisha kartani yashiramiz */
+  .hero h1 { font-size: 42px; }
+  .hd2 { flex-direction: column; align-items: flex-start; }
+  
+  /* Swiper karuselni telefonda kichraytirish */
+  .swiper-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .swiper-slide .im { height: 150px; }
+  
+  /* Banner va boshqa bloklar */
+  .ad-banner { padding: 24px 20px !important; flex-direction: column; text-align: center; }
+  .ad-banner h3 { font-size: 28px !important; }
+  
+  /* Bosh sahifadagi yangi sectionlar */
+  .gr { grid-template-columns: 1fr !important; }
+}
