@@ -1,37 +1,34 @@
+// src/hooks/useAuth.ts
 'use client';
 
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuthStore } from '@/store/auth';
 
-// ============================================================
-// USE AUTH — himoyalangan sahifalar uchun
-// ============================================================
 export function useAuth() {
+  const router = useRouter();
   const pathname = usePathname();
   const { admin, isAuthenticated, isLoading } = useAuthStore();
 
   useEffect(() => {
-    // Agar yuklanish tugagan bo'lsa va auth bo'lmasa
     if (!isLoading && !isAuthenticated && !pathname.includes('/login')) {
-      window.location.href = '/login'; // ✅ To'liq yangilash
+      router.replace('/login');
     }
-  }, [pathname, isLoading, isAuthenticated]);
+  }, [pathname, isLoading, isAuthenticated, router]);
 
   return { admin, isAuthenticated, isLoading };
 }
 
-// ============================================================
-// USE REDIRECT IF AUTHENTICATED — login sahifasi uchun
-// ============================================================
 export function useRedirectIfAuthenticated() {
+  const router = useRouter();
   const { isAuthenticated, isLoading } = useAuthStore();
 
   useEffect(() => {
+    // ✅ Agar foydalanuvchi auth bo'lsa, dashboardga yuboramiz
     if (!isLoading && isAuthenticated) {
-      window.location.href = '/dashboard'; // ✅ To'liq yangilash
+      router.replace('/dashboard');
     }
-  }, [isAuthenticated, isLoading]);
+  }, [isAuthenticated, isLoading, router]);
 
   return { isAuthenticated, isLoading };
 }
